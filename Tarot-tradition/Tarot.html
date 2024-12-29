@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>塔羅占卜</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin: 20px;
+        }
+        .image-container {
+            display: inline-block;
+            margin: 10px;
+            text-align: center;
+        }
+        img {
+            max-width: 200px; /* 每張圖片的寬度 */
+            height: auto;
+            margin: 10px;
+            transition: transform 0.5s ease;
+        }
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            margin: 5px;
+            cursor: pointer;
+        }
+        select {
+            font-size: 25px;
+            padding: 5px;
+            margin-right: 20px; /* 增加與勾選按鈕之間的間距 */
+        }
+        label {
+            font-size: 18px;
+        }
+        input[type="checkbox"] {
+            transform: scale(2); /* 放大勾選按鈕 */
+            margin-right: 10px;
+        }
+        .controls {
+            margin-bottom: 25px; /* 控制區域與按鈕的距離 */
+        }
+    </style>
+</head>
+<body>
+    <h1>塔羅占卜</h1>
+    <div class="controls">
+        <label for="image-count">選擇圖片數量：</label>
+        <select id="image-count">
+            <option value="1">1</option>
+            <option value="2">2</option>
+            <option value="3" selected>3</option>
+            <option value="4">4</option>
+            <option value="5">5</option>
+            <option value="6">6</option>
+            <option value="7">7</option>
+            <option value="8">8</option>
+            <option value="9">9</option>
+            <option value="10">10</option>
+        </select>
+        <div>
+            <input type="checkbox" id="allow-null" />
+            <label for="allow-null">允許出現空白牌</label>
+        </div>
+    </div>
+    <button onclick="showRandomImages()">抽牌</button>
+    <div id="image-container" style="display: flex; flex-wrap: wrap; justify-content: center;">
+        <!-- 圖片將顯示在此 -->
+    </div>
+
+    <script>
+        // 定義圖片路徑陣列
+        const images = [
+            "bjgwz.jpg", "bjhhz.jpg", "bjqsz.jpg", "bjscz.jpg", "bj10z.jpg", "bj9z.jpg", "bj8z.jpg", "bj7z.jpg", "bj6z.jpg", "bj5z.jpg",
+            "bj4z.jpg", "bj3z.jpg", "bj2z.jpg", "bj1z.jpg", "xbgwz.jpg", "xbhhz.jpg", "xbqsz.jpg", "xbscz.jpg", "xb10z.jpg", "xb9z.jpg",
+            "xb8z.jpg", "xb7z.jpg", "xb6z.jpg", "xb5z.jpg", "xb4z.jpg", "xb3z.jpg", "xb2z.jpg", "xb1z.jpg", "qzgwz.jpg", "qzhhz.jpg",
+            "qzqsz.jpg", "qzscz.jpg", "qz10z.jpg", "qz9z.jpg", "qz8z.jpg", "qz7z.jpg", "qz6z.jpg", "qz5z.jpg", "qz4z.jpg", "qz3z.jpg",
+            "qz2z.jpg", "qz1z.jpg", "sbgwz.jpg", "sbhhz.jpg", "sbqsz.jpg", "sbscz.jpg", "sb10z.jpg", "sb9z.jpg", "sb8z.jpg", "sb7z.jpg",
+            "sb6z.jpg", "sb5z.jpg", "sb4z.jpg", "sb3z.jpg", "sb2z.jpg", "sb1z.jpg", "sjz.jpg", "spz.jpg", "tyz.jpg", "ylz.jpg", "xxz.jpg",
+            "gtz.jpg", "emz.jpg", "jzz.jpg", "ssz.jpg", "ddrz.jpg", "zyz.jpg", "myzlz.jpg", "ysz.jpg", "llz.jpg", "zcz.jpg", "lrz.jpg",
+            "jhz.jpg", "hdz.jpg", "nhz.jpg", "njsz.jpg", "mfsz.jpg", "yrz.jpg", "null.jpg" // 包括空白牌
+        ];
+
+        // 隨機顯示多張圖片的函數
+        function showRandomImages() {
+            const count = parseInt(document.getElementById("image-count").value); // 取得圖片數量
+            const allowNull = document.getElementById("allow-null").checked; // 是否允許空白牌
+            const imageContainer = document.getElementById("image-container");
+            imageContainer.innerHTML = ""; // 清空容器
+
+            if (count > images.length) {
+                alert("圖片數量超出可選範圍！");
+                return;
+            }
+
+            const selectedImages = new Set(); // 使用 Set 確保圖片不重複
+
+            while (selectedImages.size < count) {
+                const randomIndex = Math.floor(Math.random() * images.length); // 隨機索引
+                const image = images[randomIndex];
+
+                if (!allowNull && image === "null.jpg") {
+                    // 不允許空白牌時，跳過並重新抽
+                    continue;
+                }
+                selectedImages.add(image); // 添加到 Set 中
+            }
+
+            selectedImages.forEach(image => {
+                const container = document.createElement("div");
+                container.classList.add("image-container");
+
+                const selectedImage = `./Image/${image}`; // 加入相對路徑
+
+                // 創建圖片元素
+                const imgElement = document.createElement("img");
+                imgElement.src = selectedImage;
+                imgElement.alt = "隨機圖片";
+
+                // 創建標籤文字
+                const label = document.createElement("div");
+
+                if (image === "null.jpg") {
+                    // 空白牌處理
+                    label.textContent = "空白牌";
+                } else {
+                    // 隨機決定圖片是否旋轉180度
+                    const shouldRotate = Math.random() < 0.5;
+                    if (shouldRotate) {
+                        imgElement.style.transform = "rotate(180deg)";
+                        label.textContent = "逆";
+                    } else {
+                        label.textContent = "正";
+                    }
+                }
+
+                // 將圖片和標籤添加到容器
+                container.appendChild(imgElement);
+                container.appendChild(label);
+
+                // 將容器添加到主容器
+                imageContainer.appendChild(container);
+            });
+        }
+    </script>
+</body>
+</html>

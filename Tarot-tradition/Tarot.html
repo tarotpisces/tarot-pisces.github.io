@@ -114,6 +114,11 @@
 
                 const selectedImage = `./Image/${image}`; // 加入相對路徑
 
+                // 創建超連結元素
+                const linkElement = document.createElement("a");
+                linkElement.href = selectedImage; // 點擊超連結後打開原始圖片
+                linkElement.target = "_blank"; // 在新窗口打開圖片
+
                 // 創建圖片元素
                 const imgElement = document.createElement("img");
                 imgElement.src = selectedImage;
@@ -136,8 +141,11 @@
                     }
                 }
 
-                // 將圖片和標籤添加到容器
-                container.appendChild(imgElement);
+                // 將圖片放入超連結元素
+                linkElement.appendChild(imgElement);
+
+                // 將超連結和標籤添加到容器
+                container.appendChild(linkElement);
                 container.appendChild(label);
 
                 // 將容器添加到主容器

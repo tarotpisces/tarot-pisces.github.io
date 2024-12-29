@@ -1,0 +1,48 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>隨機顯示圖片</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin: 20px;
+        }
+        img {
+            max-width: 100%;
+            height: auto;
+            margin-top: 20px;
+        }
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <h1>隨機圖片展示</h1>
+    <button onclick="showRandomImage()">抽取圖片</button>
+    <div id="image-container">
+        <!-- 圖片將顯示在此 -->
+    </div>
+
+    <script>
+        // 定義圖片路徑陣列
+        const images = ["./Image/LOOP.png", "./Image/4 qubit.png", "./Image/Transmon state.png"];
+
+        // 隨機顯示圖片的函數
+        function showRandomImage() {
+            const randomIndex = Math.floor(Math.random() * images.length); // 隨機索引
+            const selectedImage = images[randomIndex];
+
+            // 動態設置圖片到容器中
+            const imageContainer = document.getElementById("image-container");
+            imageContainer.innerHTML = `<img src="${selectedImage}" alt="隨機圖片">`;
+        }
+    </script>
+</body>
+</html>

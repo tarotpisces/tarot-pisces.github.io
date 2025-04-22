@@ -86,6 +86,9 @@
         </div>
     </div>
     <button onclick="showRandomImages()">抽牌</button>
+
+<div id="card-names" style="font-size: 20px; margin-bottom: 20px; color: #333;"></div>
+<button onclick="copyCardNames()">複製抽牌結果</button>
     <div id="image-container" style="display: flex; flex-wrap: wrap; justify-content: center;">
         <!-- 圖片將顯示在此 -->
     </div>
@@ -103,75 +106,116 @@
             "jhz.jpg", "hdz.jpg", "nhz.jpg", "njsz.jpg", "mfsz.jpg", "yrz.jpg", "null.jpg" // 包括空白牌
         ];
 
+const imageNames = {
+    "null.jpg": "空白牌（The secret unknown.）",
+    "bjgwz.jpg": "寶劍國王", "bjhhz.jpg": "寶劍皇后", "bjqsz.jpg": "寶劍騎士", "bjscz.jpg": "寶劍侍者",
+    "bj10z.jpg": "寶劍10", "bj9z.jpg": "寶劍9", "bj8z.jpg": "寶劍8", "bj7z.jpg": "寶劍7", "bj6z.jpg": "寶劍6",
+    "bj5z.jpg": "寶劍5", "bj4z.jpg": "寶劍4", "bj3z.jpg": "寶劍3", "bj2z.jpg": "寶劍2", "bj1z.jpg": "寶劍1",
+    "xbgwz.jpg": "金幣國王", "xbhhz.jpg": "金幣皇后", "xbqsz.jpg": "金幣騎士", "xbscz.jpg": "金幣侍者",
+    "xb10z.jpg": "金幣10", "xb9z.jpg": "金幣9", "xb8z.jpg": "金幣8", "xb7z.jpg": "金幣7", "xb6z.jpg": "金幣6",
+    "xb5z.jpg": "金幣5", "xb4z.jpg": "金幣4", "xb3z.jpg": "金幣3", "xb2z.jpg": "金幣2", "xb1z.jpg": "金幣1",
+    "qzgwz.jpg": "權杖國王", "qzhhz.jpg": "權杖皇后", "qzqsz.jpg": "權杖騎士", "qzscz.jpg": "權杖侍者",
+    "qz10z.jpg": "權杖10", "qz9z.jpg": "權杖9", "qz8z.jpg": "權杖8", "qz7z.jpg": "權杖7", "qz6z.jpg": "權杖6",
+    "qz5z.jpg": "權杖5", "qz4z.jpg": "權杖4", "qz3z.jpg": "權杖3", "qz2z.jpg": "權杖2", "qz1z.jpg": "權杖1",
+    "sbgwz.jpg": "聖杯國王", "sbhhz.jpg": "聖杯皇后", "sbqsz.jpg": "聖杯騎士", "sbscz.jpg": "聖杯侍者",
+    "sb10z.jpg": "聖杯10", "sb9z.jpg": "聖杯9", "sb8z.jpg": "聖杯8", "sb7z.jpg": "聖杯7", "sb6z.jpg": "聖杯6",
+    "sb5z.jpg": "聖杯5", "sb4z.jpg": "聖杯4", "sb3z.jpg": "聖杯3", "sb2z.jpg": "聖杯2", "sb1z.jpg": "聖杯1",
+    "sjz.jpg": "世界", "spz.jpg": "審判", "tyz.jpg": "太陽", "ylz.jpg": "月亮", "xxz.jpg": "星星",
+    "gtz.jpg": "高塔", "emz.jpg": "惡魔", "jzz.jpg": "節制", "ssz.jpg": "死神", "ddrz.jpg": "吊人",
+    "zyz.jpg": "正義", "myzlz.jpg": "命運之輪", "ysz.jpg": "隱者", "llz.jpg": "力量", "zcz.jpg": "戰車",
+    "lrz.jpg": "大戀人", "jhz.jpg": "教宗", "hdz.jpg": "皇帝", "nhz.jpg": "女皇", "njsz.jpg": "女祭司",
+    "mfsz.jpg": "魔術師", "yrz.jpg": "愚人"
+};
+
         // 隨機顯示多張圖片的函數
         function showRandomImages() {
-            const count = parseInt(document.getElementById("image-count").value); // 取得圖片數量
-            const allowNull = document.getElementById("allow-null").checked; // 是否允許空白牌
-            const imageContainer = document.getElementById("image-container");
-            imageContainer.innerHTML = ""; // 清空容器
+    const count = parseInt(document.getElementById("image-count").value);
+    const allowNull = document.getElementById("allow-null").checked;
+    const imageContainer = document.getElementById("image-container");
+    const cardNames = document.getElementById("card-names");
+    imageContainer.innerHTML = "";
+    cardNames.innerHTML = "";
 
-            if (count > images.length) {
-                alert("圖片數量超出可選範圍！");
-                return;
+    if (count > images.length) {
+        alert("圖片數量超出可選範圍！");
+        return;
+    }
+
+    const selectedImages = [];
+    const usedSet = new Set();
+
+    while (selectedImages.length < count) {
+        const randomIndex = Math.floor(Math.random() * images.length);
+        const image = images[randomIndex];
+
+        if (!allowNull && image === "null.jpg") continue;
+        if (usedSet.has(image)) continue;
+
+        const reversed = image !== "null.jpg" && Math.random() < 0.5;
+        selectedImages.push({ name: image, reversed: reversed });
+        usedSet.add(image);
+    }
+
+    const namesArray = [];
+
+    selectedImages.forEach(({ name, reversed }) => {
+        const container = document.createElement("div");
+        container.classList.add("image-container");
+
+        const selectedImage = `./Image/${name}`;
+
+        const linkElement = document.createElement("a");
+        linkElement.href = selectedImage;
+        linkElement.target = "_blank";
+
+        const imgElement = document.createElement("img");
+        imgElement.src = selectedImage;
+        imgElement.alt = "隨機圖片";
+
+        const label = document.createElement("div");
+
+        if (name === "null.jpg") {
+            label.textContent = "空白牌";
+        } else {
+            if (reversed) {
+                imgElement.style.transform = "rotate(180deg)";
+                label.textContent = "逆";
+            } else {
+                label.textContent = "正";
             }
-
-            const selectedImages = new Set(); // 使用 Set 確保圖片不重複
-
-            while (selectedImages.size < count) {
-                const randomIndex = Math.floor(Math.random() * images.length); // 隨機索引
-                const image = images[randomIndex];
-
-                if (!allowNull && image === "null.jpg") {
-                    // 不允許空白牌時，跳過並重新抽
-                    continue;
-                }
-                selectedImages.add(image); // 添加到 Set 中
-            }
-
-            selectedImages.forEach(image => {
-                const container = document.createElement("div");
-                container.classList.add("image-container");
-
-                const selectedImage = `./Image/${image}`; // 加入相對路徑
-
-                // 創建超連結元素
-                const linkElement = document.createElement("a");
-                linkElement.href = selectedImage; // 點擊超連結後打開原始圖片
-                linkElement.target = "_blank"; // 在新窗口打開圖片
-
-                // 創建圖片元素
-                const imgElement = document.createElement("img");
-                imgElement.src = selectedImage;
-                imgElement.alt = "隨機圖片";
-
-                // 創建標籤文字
-                const label = document.createElement("div");
-
-                if (image === "null.jpg") {
-                    // 空白牌處理
-                    label.textContent = "空白牌";
-                } else {
-                    // 隨機決定圖片是否旋轉180度
-                    const shouldRotate = Math.random() < 0.5;
-                    if (shouldRotate) {
-                        imgElement.style.transform = "rotate(180deg)";
-                        label.textContent = "逆";
-                    } else {
-                        label.textContent = "正";
-                    }
-                }
-
-                // 將圖片放入超連結元素
-                linkElement.appendChild(imgElement);
-
-                // 將超連結和標籤添加到容器
-                container.appendChild(linkElement);
-                container.appendChild(label);
-
-                // 將容器添加到主容器
-                imageContainer.appendChild(container);
-            });
         }
+
+        linkElement.appendChild(imgElement);
+        container.appendChild(linkElement);
+        container.appendChild(label);
+        imageContainer.appendChild(container);
+
+        // 中文牌名加上「逆」
+        let displayName = imageNames[name] || name;
+        if (reversed && name !== "null.jpg") {
+            displayName += "逆";
+        }
+        namesArray.push(displayName);
+    });
+
+    cardNames.textContent = namesArray.join("、");
+}
+
+function copyCardNames() {
+    const text = document.getElementById("card-names").textContent;
+    if (!text.trim()) {
+        alert("目前沒有抽出任何牌喔！");
+        return;
+    }
+
+    navigator.clipboard.writeText(text).then(() => {
+        alert("已複製抽牌結果！");
+    }).catch(err => {
+        alert("複製失敗：" + err);
+    });
+}
+
+
     </script>
 </body>
 </html>

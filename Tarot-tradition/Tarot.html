@@ -84,8 +84,15 @@
             <input type="checkbox" id="allow-null" />
             <label for="allow-null">允許出現空白牌</label>
         </div>
+	<div>
+    		<input type="checkbox" id="show-image" checked />
+    		<label for="show-image">顯示圖片</label>
+	</div>
     </div>
     <button onclick="showRandomImages()">抽牌</button>
+  <button onclick="refreshImageVisibility()">刷新圖片顯示</button>
+
+
 
 <div id="card-names" style="font-size: 20px; margin-bottom: 20px; color: #333;"></div>
 <button onclick="copyCardNames()">複製抽牌結果</button>
@@ -188,7 +195,14 @@ const imageNames = {
         linkElement.appendChild(imgElement);
         container.appendChild(linkElement);
         container.appendChild(label);
-        imageContainer.appendChild(container);
+
+        linkElement.appendChild(imgElement);
+container.appendChild(linkElement);
+container.appendChild(label);
+
+
+    imageContainer.appendChild(container);
+
 
         // 中文牌名加上「逆」
         let displayName = imageNames[name] || name;
@@ -199,6 +213,8 @@ const imageNames = {
     });
 
     cardNames.textContent = namesArray.join("、");
+refreshImageVisibility();
+
 }
 
 function copyCardNames() {
@@ -215,6 +231,14 @@ function copyCardNames() {
     });
 }
 
+function refreshImageVisibility() {
+    const showImage = document.getElementById("show-image").checked;
+    const containers = document.querySelectorAll(".image-container");
+
+    containers.forEach(container => {
+        container.style.display = showImage ? "inline-block" : "none";
+    });
+}
 
     </script>
 </body>

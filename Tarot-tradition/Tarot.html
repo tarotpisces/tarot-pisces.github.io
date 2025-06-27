@@ -219,7 +219,13 @@ container.appendChild(label);
         namesArray.push(displayName);
     });
 
-    cardNames.textContent = namesArray.join("、");
+    let nameText = namesArray.join("、");
+    if (onlyUpright) {
+        nameText += "（純正位抽牌）";
+    }
+    cardNames.textContent = nameText;
+    
+    
 refreshImageVisibility();
 
 }

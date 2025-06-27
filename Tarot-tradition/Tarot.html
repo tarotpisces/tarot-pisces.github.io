@@ -81,13 +81,18 @@
             <option value="30">30</option>
         </select>
         <div>
-            <input type="checkbox" id="allow-null" />
+            <input type="checkbox" id="allow-null" checked/>
             <label for="allow-null">允許出現空白牌</label>
         </div>
-	<div>
-    		<input type="checkbox" id="show-image" checked />
-    		<label for="show-image">顯示圖片</label>
-	</div>
+        <div>
+            <input type="checkbox" id="only-upright" />
+            <label for="only-upright">僅抽正位</label>
+        </div>
+        
+        <div>
+                <input type="checkbox" id="show-image" checked />
+                <label for="show-image">顯示圖片</label>
+        </div>
     </div>
     <button onclick="showRandomImages()">抽牌</button>
   <button onclick="refreshImageVisibility()">刷新圖片顯示</button>
@@ -138,6 +143,8 @@ const imageNames = {
         function showRandomImages() {
     const count = parseInt(document.getElementById("image-count").value);
     const allowNull = document.getElementById("allow-null").checked;
+    const onlyUpright = document.getElementById("only-upright").checked;
+
     const imageContainer = document.getElementById("image-container");
     const cardNames = document.getElementById("card-names");
     imageContainer.innerHTML = "";
@@ -158,7 +165,7 @@ const imageNames = {
         if (!allowNull && image === "null.jpg") continue;
         if (usedSet.has(image)) continue;
 
-        const reversed = image !== "null.jpg" && Math.random() < 0.5;
+        const reversed = !onlyUpright && image !== "null.jpg" && Math.random() < 0.5;
         selectedImages.push({ name: image, reversed: reversed });
         usedSet.add(image);
     }

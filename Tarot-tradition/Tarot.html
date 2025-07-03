@@ -85,8 +85,17 @@
             <label for="allow-null">允許出現空白牌</label>
         </div>
         <div>
+            <input type="checkbox" id="allow-sexuality" checked />
+            <label for="allow-sexuality">允許出現 個人專屬五宮牌</label>
+        </div>
+        
+        <div>
             <input type="checkbox" id="only-upright" />
-            <label for="only-upright">僅抽正位</label>
+            <label for="only-upright">只抽正位</label>
+        </div>
+        <div>
+            <input type="checkbox" id="only-sexuality" />
+            <label for="only-sexuality">只抽 個人專屬五宮牌</label>
         </div>
         
         <div>
@@ -115,11 +124,25 @@
             "qz2z.jpg", "qz1z.jpg", "sbgwz.jpg", "sbhhz.jpg", "sbqsz.jpg", "sbscz.jpg", "sb10z.jpg", "sb9z.jpg", "sb8z.jpg", "sb7z.jpg",
             "sb6z.jpg", "sb5z.jpg", "sb4z.jpg", "sb3z.jpg", "sb2z.jpg", "sb1z.jpg", "sjz.jpg", "spz.jpg", "tyz.jpg", "ylz.jpg", "xxz.jpg",
             "gtz.jpg", "emz.jpg", "jzz.jpg", "ssz.jpg", "ddrz.jpg", "zyz.jpg", "myzlz.jpg", "ysz.jpg", "llz.jpg", "zcz.jpg", "lrz.jpg",
-            "jhz.jpg", "hdz.jpg", "nhz.jpg", "njsz.jpg", "mfsz.jpg", "yrz.jpg", "null.jpg" // 包括空白牌
+            "jhz.jpg", "hdz.jpg", "nhz.jpg", "njsz.jpg", "mfsz.jpg", "yrz.jpg", "null.jpg","S_World.png","S_Wheel.png","S_Empress.png","S_High.png","S_Magician.png","S_Hermit.png","S_Queen.png","S_Knight.png","S_Princess.jpeg","S_Healing.png","S_Flirt.png","S_Burst.png","S_Unkown.png"
+             // 包括空白牌
         ];
 
 const imageNames = {
     "null.jpg": "空白牌（The secret unknown.）",
+    "S_World.png": "🌍 Sexuality World(個人專屬五宮能量牌：探索你的慾望世界，融合愛與自由。)",
+    "S_Wheel.png": "🎡 Sexuality Wheel of Fortune(個人專屬五宮能量牌：性與命運的交錯，是轉機也是挑戰。)",
+    "S_Empress.png": "👑 Sexuality Empress(個人專屬五宮能量牌：滋養、性感與創造力的源頭。)",
+    "S_High.png": "🌙 Sexuality High Priestess(個人專屬五宮能量牌：連結潛意識的神祕性靈。)",
+    "S_Magician.png": "🧙‍♂️ Sexuality Magician(個人專屬五宮能量牌：你擁有創造慾望現實的能力。)",
+    "S_Hermit.png": "🕯️ Sexuality Hermit(個人專屬五宮能量牌：一段內省之旅，發掘你真正的性需求。)",
+    "S_Queen.png": "👸 Sexuality Queen(個人專屬五宮能量牌：愛自己，是性感的根本力量。)",
+    "S_Knight.png": "🛡️ Sexuality Knight(個人專屬五宮能量牌：行動中的愛，勇敢追求所愛。)",
+    "S_Princess.jpeg": "🌸 Sexuality Princess(個人專屬五宮能量牌：純真、探索與初次悸動。)",
+    "S_Healing.png": "💖 Sexuality Healing(個人專屬五宮能量牌：療癒過往傷痕，找回身體的神聖感。)",
+    "S_Flirt.png": "😉 Sexuality Flirt(個人專屬五宮能量牌：輕盈而靈動的性吸引力，別忘了玩樂。)",
+    "S_Burst.png": "🔥 Sexuality Burst(個人專屬五宮能量牌：慾望的爆發，不壓抑也不逃避。)",
+    "S_Unkown.png": "❓ Sexuality Unknown(個人專屬五宮能量牌：你還沒發現的性靈祕境，值得一探。)",
     "bjgwz.jpg": "寶劍國王", "bjhhz.jpg": "寶劍皇后", "bjqsz.jpg": "寶劍騎士", "bjscz.jpg": "寶劍侍者",
     "bj10z.jpg": "寶劍10", "bj9z.jpg": "寶劍9", "bj8z.jpg": "寶劍8", "bj7z.jpg": "寶劍7", "bj6z.jpg": "寶劍6",
     "bj5z.jpg": "寶劍5", "bj4z.jpg": "寶劍4", "bj3z.jpg": "寶劍3", "bj2z.jpg": "寶劍2", "bj1z.jpg": "寶劍1",
@@ -139,119 +162,152 @@ const imageNames = {
     "mfsz.jpg": "魔術師", "yrz.jpg": "愚人"
 };
 
+const nonReversibleCards = [
+        "null.jpg",
+        "S_World.png", "S_Wheel.png", "S_Empress.png", "S_High.png",
+        "S_Magician.png", "S_Hermit.png", "S_Queen.png", "S_Knight.png",
+        "S_Princess.jpeg", "S_Healing.png", "S_Flirt.png", "S_Burst.png", "S_Unkown.png"
+    ];
+    const sexualityCards = [
+    "S_World.png", "S_Wheel.png", "S_Empress.png", "S_High.png",
+    "S_Magician.png", "S_Hermit.png", "S_Queen.png", "S_Knight.png",
+    "S_Princess.jpeg", "S_Healing.png", "S_Flirt.png", "S_Burst.png", "S_Unkown.png"
+];
+
+
         // 隨機顯示多張圖片的函數
         function showRandomImages() {
-    const count = parseInt(document.getElementById("image-count").value);
-    const allowNull = document.getElementById("allow-null").checked;
-    const onlyUpright = document.getElementById("only-upright").checked;
+        const count = parseInt(document.getElementById("image-count").value);
+        const allowNull = document.getElementById("allow-null").checked;
+        const onlyUpright = document.getElementById("only-upright").checked;
 
-    const imageContainer = document.getElementById("image-container");
-    const cardNames = document.getElementById("card-names");
-    imageContainer.innerHTML = "";
-    cardNames.innerHTML = "";
+        const imageContainer = document.getElementById("image-container");
+        const cardNames = document.getElementById("card-names");
+        imageContainer.innerHTML = "";
+        cardNames.innerHTML = "";
 
-    if (count > images.length) {
-        alert("圖片數量超出可選範圍！");
-        return;
+        if (count > images.length) {
+            alert("圖片數量超出可選範圍！");
+            return;
+        }
+
+        const onlySexuality = document.getElementById("only-sexuality").checked;
+        const allowSexuality = document.getElementById("allow-sexuality").checked;
+
+
+// 依據選項切換可抽的牌組
+let drawPool = [...images];
+
+if (onlySexuality) {
+    drawPool = drawPool.filter(name => sexualityCards.includes(name));
+} else {
+    if (!allowNull) {
+        drawPool = drawPool.filter(name => name !== "null.jpg");
     }
-
-    const selectedImages = [];
-    const usedSet = new Set();
-
-    while (selectedImages.length < count) {
-        const randomIndex = Math.floor(Math.random() * images.length);
-        const image = images[randomIndex];
-
-        if (!allowNull && image === "null.jpg") continue;
-        if (usedSet.has(image)) continue;
-
-        const reversed = !onlyUpright && image !== "null.jpg" && Math.random() < 0.5;
-        selectedImages.push({ name: image, reversed: reversed });
-        usedSet.add(image);
+    if (!allowSexuality) {
+        drawPool = drawPool.filter(name => !sexualityCards.includes(name));
     }
+}
 
-    const namesArray = [];
 
-    selectedImages.forEach(({ name, reversed }) => {
-        const container = document.createElement("div");
-        container.classList.add("image-container");
 
-        const selectedImage = `./Image/${name}`;
+        const selectedImages = [];
+        const usedSet = new Set();
 
-        const linkElement = document.createElement("a");
-        linkElement.href = selectedImage;
-        linkElement.target = "_blank";
+        while (selectedImages.length < count) {
+            const randomIndex = Math.floor(Math.random() * drawPool.length);
+            const image = drawPool[randomIndex];
 
-        const imgElement = document.createElement("img");
-        imgElement.src = selectedImage;
-        imgElement.alt = "隨機圖片";
 
-        const label = document.createElement("div");
+            if (!allowNull && image === "null.jpg") continue;
+            if (usedSet.has(image)) continue;
 
-        if (name === "null.jpg") {
-            label.textContent = "空白牌";
-        } else {
-            if (reversed) {
-                imgElement.style.transform = "rotate(180deg)";
-                label.textContent = "逆";
+            const isNonReversible = nonReversibleCards.includes(image);
+            const reversed = !onlyUpright && !isNonReversible && Math.random() < 0.5;
+
+            selectedImages.push({ name: image, reversed });
+            usedSet.add(image);
+        }
+
+        const namesArray = [];
+
+        selectedImages.forEach(({ name, reversed }) => {
+            const container = document.createElement("div");
+            container.classList.add("image-container");
+
+            const selectedImage = `./Image/${name}`;
+
+            const linkElement = document.createElement("a");
+            linkElement.href = selectedImage;
+            linkElement.target = "_blank";
+
+            const imgElement = document.createElement("img");
+            imgElement.src = selectedImage;
+            imgElement.alt = "隨機圖片";
+
+            const label = document.createElement("div");
+
+            if (nonReversibleCards.includes(name)) {
+                label.textContent = name === "null.jpg" ? "空白牌" : "正";
             } else {
-                label.textContent = "正";
+                label.textContent = reversed ? "逆" : "正";
+                if (reversed) {
+                    imgElement.style.transform = "rotate(180deg)";
+                }
             }
+            // 收集 Sexuality 說明
+
+
+            linkElement.appendChild(imgElement);
+            container.appendChild(linkElement);
+            container.appendChild(label);
+            imageContainer.appendChild(container);
+
+            let displayName = imageNames[name] || name;
+            if (reversed && !nonReversibleCards.includes(name)) {
+                displayName += "逆";
+            }
+            namesArray.push(displayName);
+        });
+
+        let suffixes = [];
+        if (onlyUpright) suffixes.push("純正位抽牌");
+        if (onlySexuality) suffixes.push("只抽 Sexuality 牌");
+        if (!onlySexuality && allowSexuality) suffixes.push("允許出現 Sexuality 牌");
+
+
+        let nameText = namesArray.join("、");
+        if (suffixes.length > 0) {
+            nameText += "（" + suffixes.join("，") + "）";
         }
+        cardNames.textContent = nameText;
 
-        linkElement.appendChild(imgElement);
-        container.appendChild(linkElement);
-        container.appendChild(label);
-
-        linkElement.appendChild(imgElement);
-container.appendChild(linkElement);
-container.appendChild(label);
-
-
-    imageContainer.appendChild(container);
-
-
-        // 中文牌名加上「逆」
-        let displayName = imageNames[name] || name;
-        if (reversed && name !== "null.jpg") {
-            displayName += "逆";
-        }
-        namesArray.push(displayName);
-    });
-
-    let nameText = namesArray.join("、");
-    if (onlyUpright) {
-        nameText += "（純正位抽牌）";
-    }
-    cardNames.textContent = nameText;
-    
-    
-refreshImageVisibility();
-
-}
-
-function copyCardNames() {
-    const text = document.getElementById("card-names").textContent;
-    if (!text.trim()) {
-        alert("目前沒有抽出任何牌喔！");
-        return;
+        refreshImageVisibility();
+        
     }
 
-    navigator.clipboard.writeText(text).then(() => {
-        alert("已複製抽牌結果！");
-    }).catch(err => {
-        alert("複製失敗：" + err);
-    });
-}
+    function copyCardNames() {
+        const text = document.getElementById("card-names").textContent;
+        if (!text.trim()) {
+            alert("目前沒有抽出任何牌喔！");
+            return;
+        }
 
-function refreshImageVisibility() {
-    const showImage = document.getElementById("show-image").checked;
-    const containers = document.querySelectorAll(".image-container");
+        navigator.clipboard.writeText(text).then(() => {
+            alert("已複製抽牌結果！");
+        }).catch(err => {
+            alert("複製失敗：" + err);
+        });
+    }
 
-    containers.forEach(container => {
-        container.style.display = showImage ? "inline-block" : "none";
-    });
-}
+    function refreshImageVisibility() {
+        const showImage = document.getElementById("show-image").checked;
+        const containers = document.querySelectorAll(".image-container");
+
+        containers.forEach(container => {
+            container.style.display = showImage ? "inline-block" : "none";
+        });
+    }
 
     </script>
 </body>

@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>圖片批次生成器</title>
+</head>
+<body>
+    <h3>請輸入圖片檔名（每行一個）：</h3>
+    <textarea id="input" rows="10" cols="50"></textarea>
+    <br>
+    <button onclick="generate()">確定</button>
+    <button onclick="copyToClipboard()">複製</button>
+    <hr>
+    <pre id="output" style="background: #f0f0f0; padding: 1em;"></pre>
+
+    <script>
+        function generate() {
+            const input = document.getElementById("input").value.trim().split("\n");
+            let html = "";
+            input.forEach(filename => {
+                filename = filename.trim();
+                if (filename !== "") {
+                    html += `
+<div style="text-align: center;">
+    <a href="../Image/${filename}">
+        <img src="../Image/${filename}" alt="顯示不同模組區域的結構圖" style="width: 100%; height: auto;">
+    </a>
+</div>
+<p class="dark-background">
+    ▲
+    <span style="font-size: 0.7em; line-height: 0.8;">
+        
+    </span>
+    <br><br>
+</p>\n\n\n`;
+                }
+            });
+            document.getElementById("output").textContent = html;
+        }
+
+        function copyToClipboard() {
+            const output = document.getElementById("output");
+            const text = output.textContent;
+            navigator.clipboard.writeText(text).then(() => {
+                alert("已複製到剪貼簿！");
+            }).catch(err => {
+                alert("複製失敗：" + err);
+            });
+        }
+    </script>
+</body>
+</html>

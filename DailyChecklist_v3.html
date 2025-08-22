@@ -1,0 +1,156 @@
+-n <!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8" >
+  <meta name="viewport" content="width=device-width, initial-scale=1" >
+  <title>今日完成事項</title>
+  <style>
+    :root { --gap: 12px; --radius: 10px; }
+    body { font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Noto Sans TC", "PingFang TC", "Microsoft JhengHei", sans-serif; line-height: 1.6; margin: 0; padding: 24px; background: #f7f7f8; color: #222; }
+    h1 { font-size: 20px; margin: 0 0 12px; }
+    .card { background: #fff; border-radius: var(--radius); box-shadow: 0 1px 6px rgba(0,0,0,.06); padding: 18px; margin-bottom: 16px; }
+    .group-title { font-weight: 700; margin-bottom: 8px; }
+    .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: var(--gap); align-items: center; }
+    label.chk { display: flex; align-items: center; gap: 8px; background: #fafafa; border: 1px solid #eaeaea; border-radius: 8px; padding: 10px 12px; cursor: pointer; user-select: none; }
+    input[type="checkbox"] { width: 18px; height: 18px; }
+    .input-group { display: flex; flex-direction: column; margin-bottom: 14px; }
+    .input-group label { font-weight: 600; margin-bottom: 4px; }
+    .input-group input[type="text"], .input-group input[type="number"] { width: 100%; padding: 10px 12px; border: 1px solid #ddd; border-radius: 8px; font-size: 16px; background: #fff; }
+    .btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; padding: 12px 16px; border: none; border-radius: 10px; font-weight: 700; cursor: pointer; background: #2f7cf6; color: #fff; width: 100%; }
+    .btn:active { transform: translateY(1px); }
+    .result { background: #0f172a; color: #e5e7eb; padding: 14px; border-radius: 8px; white-space: pre-wrap; min-height: 64px; font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace; }
+    .toast { position: fixed; left: 50%; bottom: 24px; transform: translateX(-50%); background: #111827; color: #fff; padding: 10px 14px; border-radius: 999px; box-shadow: 0 4px 16px rgba(0,0,0,.18); opacity: 0; pointer-events: none; transition: opacity .25s ease; font-size: 14px; }
+    .toast.show { opacity: 1; }
+    .hint { color: #666; font-size: 13px; }
+  </style>
+</head>
+<body>
+  <h1>今日完成事項小工具</h1>
+  <div class="card">
+    <div class="group-title">可勾選的事項</div>
+    <div class="grid">
+      <label class="chk"><input class="task-checkbox" type="checkbox" data-label="家事"><span>家事</span></label>
+      <label class="chk"><input class="task-checkbox" type="checkbox" data-label="澆花"><span>澆花</span></label>
+      <label class="chk"><input class="task-checkbox" type="checkbox" data-label="運動"><span>運動</span></label>
+      <label class="chk"><input class="task-checkbox" type="checkbox" data-label="閱讀"><span>閱讀</span></label>
+      <label class="chk"><input class="task-checkbox" type="checkbox" data-label="整理房間"><span>整理房間</span></label>
+      <label class="chk"><input class="task-checkbox" type="checkbox" data-label="五宮"><span>五宮</span></label>
+      <label class="chk"><input class="task-checkbox" type="checkbox" data-label="五宮1"><span>五宮1</span></label>
+      <label class="chk"><input class="task-checkbox" type="checkbox" data-label="五宮2"><span>五宮2</span></label>
+      <label class="chk"><input class="task-checkbox" type="checkbox" data-label="五宮3"><span>五宮3</span></label>
+      <label class="chk"><input class="task-checkbox" type="checkbox" data-label="五宮4"><span>五宮4</span></label>
+      <label class="chk"><input class="task-checkbox" type="checkbox" data-label="五宮5"><span>五宮5</span></label>
+      <label class="chk"><input class="task-checkbox" type="checkbox" data-label="五宮6"><span>五宮6</span></label>
+      <label class="chk"><input class="task-checkbox" type="checkbox" data-label="五宮7"><span>五宮7</span></label>
+      <label class="chk"><input class="task-checkbox" type="checkbox" data-label="五宮8"><span>五宮8</span></label>
+      <label class="chk"><input class="task-checkbox" type="checkbox" data-label="五宮9"><span>五宮9</span></label>
+      <label class="chk"><input class="task-checkbox" type="checkbox" data-label="五宮10"><span>五宮10</span></label>
+      <label class="chk"><input class="task-checkbox" type="checkbox" data-label="五宮11"><span>五宮11</span></label>
+      <label class="chk"><input class="task-checkbox" type="checkbox" data-label="五宮12"><span>五宮12</span></label>
+      <label class="chk"><input class="task-checkbox" type="checkbox" data-label="五宮13"><span>五宮13</span></label>
+      <label class="chk"><input class="task-checkbox" type="checkbox" data-label="五宮14"><span>五宮14</span></label>
+      <label class="chk"><input class="task-checkbox" type="checkbox" data-label="五宮15"><span>五宮15</span></label>
+      <label class="chk"><input class="task-checkbox" type="checkbox" data-label="五宮16"><span>五宮16</span></label>
+      <label class="chk"><input class="task-checkbox" type="checkbox" data-label="五宮17"><span>五宮17</span></label>
+      <label class="chk"><input class="task-checkbox" type="checkbox" data-label="五宮18"><span>五宮18</span></label>
+      <label class="chk"><input class="task-checkbox" type="checkbox" data-label="五宮19"><span>五宮19</span></label>
+      <label class="chk"><input class="task-checkbox" type="checkbox" data-label="五宮20"><span>五宮20</span></label>
+    </div>
+    <div class="hint" style="margin-top:8px;">想新增選項？複製上面的任一區塊即可（label.chk）。</div>
+  </div>
+  <div class="card">
+    <div class="group-title">可填入字串的項目</div>
+    <div class="input-group">
+      <label for="w">體重</label>
+      <input id="w" class="task-input" type="number" min="0" step="0.1" placeholder="例如 50" data-prefix="量體重：" >
+    </div>
+    <div class="input-group">
+      <label for="water">喝水量</label>
+      <input id="water" class="task-input" type="text" placeholder="例如 2000 ml" data-prefix="喝水：" >
+    </div>
+    <div class="input-group">
+      <label for="steps">步數</label>
+      <input id="steps" class="task-input" type="text" placeholder="例如 8000" data-prefix="走路步數：" >
+    </div>
+    <div class="input-group">
+      <label for="note">備註</label>
+      <input id="note" class="task-input" type="text" placeholder="任何想記錄的事" data-prefix="備註：" >
+    </div>
+  </div>
+  <div class="card">
+    <button id="genCopyBtn" class="btn" type="button">生成今日完成清單並複製</button>
+    <div class="hint" style="margin-top:8px;">會自動生成「今日做完的事情：」與條列清單，並自動複製到剪貼簿。</div>
+    <button id="genLinkBtn" class="btn" type="button">生成完成網址並前往</button>
+  </div>
+  <div class="card">
+    <div class="group-title">今日做完的事情：</div>
+    <div id="result" class="result">（按下上方按鈕後顯示）</div>
+  </div>
+  <div id="toast" class="toast" role="status" aria-live="polite">已複製到剪貼簿 ?</div>
+  <script>
+    function showToast(msg) {
+      const el = document.getElementById("toast");
+      el.textContent = msg;
+      el.classList.add("show");
+      setTimeout(() => el.classList.remove("show"), 1800);
+    }
+    function buildListText() {
+      const lines = [];
+      document.querySelectorAll(".task-checkbox:checked").forEach(cb => {
+        const label = cb.dataset.label?.trim();
+        if (label) lines.push(label);
+      });
+      document.querySelectorAll(".task-input").forEach(inp => {
+        const val = (inp.value || "").trim();
+        if (val !== "") {
+          const prefix = inp.dataset.prefix || "";
+          const suffix = inp.dataset.suffix || "";
+          lines.push(prefix + val + suffix);
+        }
+      });
+      const header = "今日做完的事情：";
+      return header + "#" + (lines.length ? lines.join("#") : "（無）");
+    }
+    async function copyToClipboard(text) {
+      if (navigator.clipboard && window.isSecureContext) {
+        await navigator.clipboard.writeText(text);
+        return true;
+      }
+      const ta = document.createElement("textarea");
+      ta.value = text;
+      ta.style.position = "fixed"; ta.style.left = "-9999px";
+      document.body.appendChild(ta);
+      ta.focus(); ta.select();
+      try { const ok = document.execCommand("copy"); document.body.removeChild(ta); return ok; }
+      catch (e) { document.body.removeChild(ta); return false; }
+    }
+    document.getElementById("genCopyBtn").addEventListener("click", async () => {
+      const text = buildListText();
+      const resultEl = document.getElementById("result");
+      resultEl.textContent = text;
+      const ok = await copyToClipboard(text);
+      showToast(ok ? "已複製到剪貼簿 ?" : "無法自動複製，請手動複製 ??");
+      resultEl.scrollIntoView({ behavior: "smooth", block: "start" });
+    });
+  </script>
+  <script>
+function buildNewURL() {
+const url = new URL("./DailyChecklist_v3.html", location.origin);
+const params = new URLSearchParams();
+const bits = Array.from(document.querySelectorAll(".task-checkbox"))
+  .map(cb => cb.checked ? "1" : "0").join("");
+params.set("c", bits);document.querySelectorAll(".task-input").forEach(inp => {
+  const key = inp.id;
+  const val = (inp.value || "").trim();
+  if (key && val) params.set(key, val);
+});
+url.search = params.toString();
+return url.toString();
+}
+genLinkBtn.addEventListener("click", () => {
+ const newUrl = buildNewURL();
+  location.href = newUrl;
+ });
+</script>
+</body>
+</html>

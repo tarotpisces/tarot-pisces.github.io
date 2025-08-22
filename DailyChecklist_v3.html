@@ -44,7 +44,7 @@
     <div class="group-title">可填入字串的項目</div>
     <div class="input-group">
       <label for="w">體重</label>
-      <input id="w" class="task-input" type="number" min="0" step="0.1" placeholder="例如 50" data-prefix="量體重：" >
+      <input id="w" class="task-input" type="text" placeholder="例如 50" data-prefix="量體重：" >
     </div>
     <div class="input-group">
       <label for="water">喝水量</label>
@@ -116,6 +116,46 @@
     });
   </script>
   <script>
+function applyChecksByBits(bitstr) {
+  if (!bitstr) return;
+   const boxes = document.querySelectorAll(".task-checkbox");
+    for (let i = 0; i < boxes.length && i < bitstr.length; i++) {
+     boxes[i].checked = bitstr[i] === "1";
+   }
+ }
+  function applyInputsById(q) {
+    document.querySelectorAll(".task-input").forEach(inp => {
+     const key = inp.id;
+    if (key && q.get(key) != null) {
+       inp.value = q.get(key);
+    }
+   });
+ }
+ (function initFromQuery() {
+    const q = new URLSearchParams(location.search);
+    applyChecksByBits(q.get("c"));
+    applyInputsById(q);
+  })();
+  function buildNewURL() {
+    const url = new URL("https://tarotpisces.github.io/tarot-pisces.github.io/DailyChecklist_v3.html", location.href);
+    const params = new URLSearchParams();
+    const bits = Array.from(document.querySelectorAll(".task-checkbox"))
+      .map(cb => cb.checked ? "1" : "0").join("");
+    params.set("c", bits);
+    document.querySelectorAll(".task-input").forEach(inp => {
+      const key = inp.id;
+      const val = (inp.value || "").trim();
+      if (key && val) params.set(key, val);
+    });
+    url.search = params.toString();
+    return url.toString();
+  }
+  const genLinkBtn = document.getElementById("genLinkBtn");
+  genLinkBtn.addEventListener("click", () => {
+    const newUrl = buildNewURL();
+    location.href = newUrl;
+  });
+</script>
 function buildNewURL() {
 const url = new URL("https://tarotpisces.github.io/tarot-pisces.github.io/DailyChecklist_v3.html", location.origin);
 const params = new URLSearchParams();
@@ -129,10 +169,5 @@ params.set("c", bits);document.querySelectorAll(".task-input").forEach(inp => {
 url.search = params.toString();
 return url.toString();
 }
-genLinkBtn.addEventListener("click", () => {
- const newUrl = buildNewURL();
-  location.href = newUrl;
- });
-</script>
 </body>
 </html>

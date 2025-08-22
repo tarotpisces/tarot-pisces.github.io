@@ -37,24 +37,6 @@
       <label class="chk"><input class="task-checkbox" type="checkbox" data-label="五宮"><span>五宮</span></label>
       <label class="chk"><input class="task-checkbox" type="checkbox" data-label="五宮1"><span>五宮1</span></label>
       <label class="chk"><input class="task-checkbox" type="checkbox" data-label="五宮2"><span>五宮2</span></label>
-      <label class="chk"><input class="task-checkbox" type="checkbox" data-label="五宮3"><span>五宮3</span></label>
-      <label class="chk"><input class="task-checkbox" type="checkbox" data-label="五宮4"><span>五宮4</span></label>
-      <label class="chk"><input class="task-checkbox" type="checkbox" data-label="五宮5"><span>五宮5</span></label>
-      <label class="chk"><input class="task-checkbox" type="checkbox" data-label="五宮6"><span>五宮6</span></label>
-      <label class="chk"><input class="task-checkbox" type="checkbox" data-label="五宮7"><span>五宮7</span></label>
-      <label class="chk"><input class="task-checkbox" type="checkbox" data-label="五宮8"><span>五宮8</span></label>
-      <label class="chk"><input class="task-checkbox" type="checkbox" data-label="五宮9"><span>五宮9</span></label>
-      <label class="chk"><input class="task-checkbox" type="checkbox" data-label="五宮10"><span>五宮10</span></label>
-      <label class="chk"><input class="task-checkbox" type="checkbox" data-label="五宮11"><span>五宮11</span></label>
-      <label class="chk"><input class="task-checkbox" type="checkbox" data-label="五宮12"><span>五宮12</span></label>
-      <label class="chk"><input class="task-checkbox" type="checkbox" data-label="五宮13"><span>五宮13</span></label>
-      <label class="chk"><input class="task-checkbox" type="checkbox" data-label="五宮14"><span>五宮14</span></label>
-      <label class="chk"><input class="task-checkbox" type="checkbox" data-label="五宮15"><span>五宮15</span></label>
-      <label class="chk"><input class="task-checkbox" type="checkbox" data-label="五宮16"><span>五宮16</span></label>
-      <label class="chk"><input class="task-checkbox" type="checkbox" data-label="五宮17"><span>五宮17</span></label>
-      <label class="chk"><input class="task-checkbox" type="checkbox" data-label="五宮18"><span>五宮18</span></label>
-      <label class="chk"><input class="task-checkbox" type="checkbox" data-label="五宮19"><span>五宮19</span></label>
-      <label class="chk"><input class="task-checkbox" type="checkbox" data-label="五宮20"><span>五宮20</span></label>
     </div>
     <div class="hint" style="margin-top:8px;">想新增選項？複製上面的任一區塊即可（label.chk）。</div>
   </div>
@@ -135,7 +117,7 @@
   </script>
   <script>
 function buildNewURL() {
-const url = new URL("./DailyChecklist_v3.html", location.origin);
+const url = new URL("https://tarotpisces.github.io/tarot-pisces.github.io/DailyChecklist_v3.html", location.origin);
 const params = new URLSearchParams();
 const bits = Array.from(document.querySelectorAll(".task-checkbox"))
   .map(cb => cb.checked ? "1" : "0").join("");

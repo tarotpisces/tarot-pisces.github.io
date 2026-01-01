@@ -1,0 +1,459 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>塔羅占卜</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin: 20px;
+        }
+        .image-container {
+            display: inline-block;
+            margin: 10px;
+            text-align: center;
+        }
+        img {
+            max-width: 85px; /* 每張圖片的寬度 */
+            height: auto;
+            margin: 10px;
+            transition: transform 0.5s ease;
+        }
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            margin: 5px;
+            cursor: pointer;
+        }
+        select {
+            font-size: 25px;
+            padding: 5px;
+            margin-right: 20px; /* 增加與勾選按鈕之間的間距 */
+        }
+        label {
+            font-size: 18px;
+        }
+        input[type="checkbox"] {
+            transform: scale(2); /* 放大勾選按鈕 */
+            margin-right: 10px;
+        }
+        .controls {
+            margin-bottom: 25px; /* 控制區域與按鈕的距離 */
+        }
+    </style>
+</head>
+<body>
+    <h1></h1>
+    <div class="controls">
+        <label for="image-count">選擇圖片數量：</label>
+        <select id="image-count">
+            <option value="1">1</option>
+            <option value="2">2</option>
+            <option value="3" selected>3</option>
+            <option value="4">4</option>
+            <option value="5">5</option>
+            <option value="6">6</option>
+            <option value="7">7</option>
+            <option value="8">8</option>
+            <option value="9">9</option>
+            <option value="10">10</option>
+            <option value="11">11</option>
+            <option value="12">12</option>
+            <option value="13">13</option>
+            <option value="14">14</option>
+            <option value="15">15</option>
+            <option value="16">16</option>
+            <option value="17">17</option>
+            <option value="18">18</option>
+            <option value="19">19</option>
+            <option value="20">20</option>
+            <option value="21">21</option>
+            <option value="22">22</option>
+            <option value="23">23</option>
+            <option value="24">24</option>
+            <option value="25">25</option>
+            <option value="26">26</option>
+            <option value="27">27</option>
+            <option value="28">28</option>
+            <option value="29">29</option>
+            <option value="30">30</option>
+        </select>
+        <div>
+            <input type="checkbox" id="allow-null" checked/>
+            <label for="allow-null">允許出現空白牌</label>
+        </div>
+        <div>
+            <input type="checkbox" id="allow-sexuality" checked />
+            <label for="allow-sexuality">允許出現 個人專屬五宮牌</label>
+        </div>
+        
+        <div>
+            <input type="checkbox" id="only-upright" />
+            <label for="only-upright">只抽正位</label>
+        </div>
+        <div>
+            <input type="checkbox" id="only-sexuality" />
+            <label for="only-sexuality">只抽 個人專屬五宮牌</label>
+        </div>
+        
+        <div>
+                <input type="checkbox" id="show-image" checked />
+                <label for="show-image">顯示圖片</label>
+        </div>
+    </div>
+    <button onclick="showRandomImages()">抽牌</button>
+  <button onclick="refreshImageVisibility()">刷新圖片顯示</button>
+
+
+
+<div id="card-names" style="font-size: 20px; margin-bottom: 20px; color: #333;"></div>
+<button onclick="copyCardNames()">複製抽牌結果</button>
+    <div id="image-container" style="display: flex; flex-wrap: wrap; justify-content: center;">
+        <!-- 圖片將顯示在此 -->
+    </div>
+
+    <script>
+        // 定義圖片路徑陣列
+        const images = [
+            "bjgwz.jpg", "bjhhz.jpg", "bjqsz.jpg", "bjscz.jpg", "bj10z.jpg", "bj9z.jpg", "bj8z.jpg", "bj7z.jpg", "bj6z.jpg", "bj5z.jpg",
+            "bj4z.jpg", "bj3z.jpg", "bj2z.jpg", "bj1z.jpg", "xbgwz.jpg", "xbhhz.jpg", "xbqsz.jpg", "xbscz.jpg", "xb10z.jpg", "xb9z.jpg",
+            "xb8z.jpg", "xb7z.jpg", "xb6z.jpg", "xb5z.jpg", "xb4z.jpg", "xb3z.jpg", "xb2z.jpg", "xb1z.jpg", "qzgwz.jpg", "qzhhz.jpg",
+            "qzqsz.jpg", "qzscz.jpg", "qz10z.jpg", "qz9z.jpg", "qz8z.jpg", "qz7z.jpg", "qz6z.jpg", "qz5z.jpg", "qz4z.jpg", "qz3z.jpg",
+            "qz2z.jpg", "qz1z.jpg", "sbgwz.jpg", "sbhhz.jpg", "sbqsz.jpg", "sbscz.jpg", "sb10z.jpg", "sb9z.jpg", "sb8z.jpg", "sb7z.jpg",
+            "sb6z.jpg", "sb5z.jpg", "sb4z.jpg", "sb3z.jpg", "sb2z.jpg", "sb1z.jpg", "sjz.jpg", "spz.jpg", "tyz.jpg", "ylz.jpg", "xxz.jpg",
+            "gtz.jpg", "emz.jpg", "jzz.jpg", "ssz.jpg", "ddrz.jpg", "zyz.jpg", "myzlz.jpg", "ysz.jpg", "llz.jpg", "zcz.jpg", "lrz.jpg",
+            "jhz.jpg", "hdz.jpg", "nhz.jpg", "njsz.jpg", "mfsz.jpg", "yrz.jpg", "null.jpg",
+            "O_Sexuality_New_Era.png",
+"I_Sexuality_Magician.PNG",
+"II_Sexuality_High_Priestess.PNG",
+"III_Sexuality_Empress.PNG",
+"IV_Sexuality_Great_Marshal.PNG",
+"V_Sexuality_Goddess.PNG",
+"VI_Sexuality_Choice.PNG",
+"VII_Sexuality_Summon.PNG",
+"VIII_Sexuality_Strength.png",
+"IX_Sexuality_Hermit.PNG",
+"X_Sexuality_Wheel_of_Fortune.PNG",
+"XI_Sexuality_Justice.PNG",
+"XII_Sexuality_Restriction.PNG",
+"XIII_Sexuality_Death.PNG",
+"XIV_Sexuality_Temperance.PNG",
+"XV_Sexuality_Kink.PNG",
+"XVI_Sexuality_Tower.PNG",
+"XVII_Sexuality_Star.PNG",
+"XVIII_Sexuality_Moon.png",
+"XIX_Sexuality_Sunshine.PNG",
+"XX_Sexuality_Judgement.PNG",
+"XXI_Sexuality_Universe.PNG",
+"XXII_Sexuality_Unknown.PNG",
+"XXIII_Sexuality_Epic_Romance.PNG",
+"Sexuality_Queen_of_Pentacle.png",
+"Sexuality_Princess_of_Pentacle.png",
+"Sexuality_Queen_of_Cups.PNG",
+"Sexuality_Princess_of_Cups.PNG",
+"Sexuality_Queen_of_Fire.PNG",
+"Sexuality_Princess_of_Fire.PNG",
+"Sexuality_Queen_of_Wisdom.png",
+"Sexuality_Princess_of_Wisdom.png",
+"Sexuality_Queen_of_Eros.PNG",
+"Sexuality_Princess_of_Eros.PNG",
+"1_Sexuality_Oracle_of_Inspiration.PNG",
+"2_Sexuality_Oracle_of_Garden.png",
+"3_Sexuality_Oracle_of_Rose_Love.PNG",
+"4_Sexuality_Oracle_of_Balance.png",
+"5_Sexuality_Oracle_of_Manifest.PNG",
+"6_Sexuality_Oracle_of_Vacation.png",
+"7_Sexuality_Oracle_of_Pleasure.PNG"
+             // 包括空白牌
+        ];
+
+const imageNames = {
+    "null.jpg": "空白牌（The secret unknown.）",
+    "O_Sexuality_New_Era.png":"O Sexuality New Era(個人五宮專屬牌)",
+    "I_Sexuality_Magician.PNG":"I Sexuality Magician(個人五宮專屬牌)",
+    "II_Sexuality_High_Priestess.PNG":"II Sexuality High Priestess(個人五宮專屬牌)",
+    "III_Sexuality_Empress.PNG":"III Sexuality Empress(個人五宮專屬牌)",
+    "IV_Sexuality_Great_Marshal.PNG":"IV Sexuality Great Marshal(個人五宮專屬牌)",
+    "V_Sexuality_Goddess.PNG":"V Sexuality Goddess(個人五宮專屬牌)",
+    "VI_Sexuality_Choice.PNG":"VI Sexuality Choice(個人五宮專屬牌)",
+    "VII_Sexuality_Summon.PNG":"VII Sexuality Summon(個人五宮專屬牌)",
+    "VIII_Sexuality_Strength.png":"VIII Sexuality Strength(個人五宮專屬牌)",
+    "IX_Sexuality_Hermit.PNG":"IX Sexuality Hermit(個人五宮專屬牌)",
+    "X_Sexuality_Wheel_of_Fortune.PNG":"X Sexuality Wheel of Fortune(個人五宮專屬牌)",
+    "XI_Sexuality_Justice.PNG":"XI Sexuality Justice(個人五宮專屬牌)",
+    "XII_Sexuality_Restriction.PNG":"XII Sexuality Restriction(個人五宮專屬牌)",
+    "XIII_Sexuality_Death.PNG":"XIII Sexuality Death(個人五宮專屬牌)",
+    "XIV_Sexuality_Temperance.PNG":"XIV Sexuality Temperance(個人五宮專屬牌)",
+    "XV_Sexuality_Kink.PNG":"XV Sexuality Kink(個人五宮專屬牌)",
+    "XVI_Sexuality_Tower.PNG":"XVI Sexuality Tower(個人五宮專屬牌)",
+    "XVII_Sexuality_Star.PNG":"XVII Sexuality Star(個人五宮專屬牌)",
+    "XVIII_Sexuality_Moon.png":"XVIII Sexuality Moon(個人五宮專屬牌)",
+    "XIX_Sexuality_Sunshine.PNG":"XIX Sexuality Sunshine(個人五宮專屬牌)",
+    "XX_Sexuality_Judgement.PNG":"XX Sexuality Judgement(個人五宮專屬牌)",
+    "XXI_Sexuality_Universe.PNG":"XXI Sexuality Universe(個人五宮專屬牌)",
+    "XXII_Sexuality_Unknown.PNG":"XXII Sexuality Unknown(個人五宮專屬牌)",
+    "XXIII_Sexuality_Epic_Romance.PNG":"XXIII Sexuality Epic Romance(個人五宮專屬牌)",
+    "Sexuality_Queen_of_Pentacle.png":"Sexuality Queen of Pentacle(個人五宮專屬牌)",
+    "Sexuality_Princess_of_Pentacle.png":"Sexuality Princess of Pentacle(個人五宮專屬牌)",
+    "Sexuality_Queen_of_Cups.PNG":"Sexuality Queen of Cups(個人五宮專屬牌)",
+    "Sexuality_Princess_of_Cups.PNG":"Sexuality Princess of Cups(個人五宮專屬牌)",
+    "Sexuality_Queen_of_Fire.PNG":"Sexuality Queen of Fire(個人五宮專屬牌)",
+    "Sexuality_Princess_of_Fire.PNG":"Sexuality Princess of Fire(個人五宮專屬牌)",
+    "Sexuality_Queen_of_Wisdom.png":"Sexuality Queen of Wisdom(個人五宮專屬牌)",
+    "Sexuality_Princess_of_Wisdom.png":"Sexuality Princess of Wisdom(個人五宮專屬牌)",
+    "Sexuality_Queen_of_Eros.PNG":"Sexuality Queen of Eros(個人五宮專屬牌)",
+    "Sexuality_Princess_of_Eros.PNG":"Sexuality Princess of Eros(個人五宮專屬牌)",
+    "1_Sexuality_Oracle_of_Inspiration.PNG":"1 Sexuality Oracle of Inspiration(個人五宮專屬牌)",
+    "2_Sexuality_Oracle_of_Garden.png":"2 Sexuality Oracle of Garden(個人五宮專屬牌)",
+    "3_Sexuality_Oracle_of_Rose_Love.PNG":"3 Sexuality Oracle of Rose Love(個人五宮專屬牌)",
+    "4_Sexuality_Oracle_of_Balance.png":"4 Sexuality Oracle of Balance(個人五宮專屬牌)",
+    "5_Sexuality_Oracle_of_Manifest.PNG":"5 Sexuality Oracle of Manifest(個人五宮專屬牌)",
+    "6_Sexuality_Oracle_of_Vacation.png":"6 Sexuality Oracle of Vacation(個人五宮專屬牌)",
+    "7_Sexuality_Oracle_of_Pleasure.PNG":"7 Sexuality Oracle of Pleasure(個人五宮專屬牌)",
+    "bjgwz.jpg": "寶劍國王", "bjhhz.jpg": "寶劍皇后", "bjqsz.jpg": "寶劍騎士", "bjscz.jpg": "寶劍侍者",
+    "bj10z.jpg": "寶劍10", "bj9z.jpg": "寶劍9", "bj8z.jpg": "寶劍8", "bj7z.jpg": "寶劍7", "bj6z.jpg": "寶劍6",
+    "bj5z.jpg": "寶劍5", "bj4z.jpg": "寶劍4", "bj3z.jpg": "寶劍3", "bj2z.jpg": "寶劍2", "bj1z.jpg": "寶劍1",
+    "xbgwz.jpg": "金幣國王", "xbhhz.jpg": "金幣皇后", "xbqsz.jpg": "金幣騎士", "xbscz.jpg": "金幣侍者",
+    "xb10z.jpg": "金幣10", "xb9z.jpg": "金幣9", "xb8z.jpg": "金幣8", "xb7z.jpg": "金幣7", "xb6z.jpg": "金幣6",
+    "xb5z.jpg": "金幣5", "xb4z.jpg": "金幣4", "xb3z.jpg": "金幣3", "xb2z.jpg": "金幣2", "xb1z.jpg": "金幣1",
+    "qzgwz.jpg": "權杖國王", "qzhhz.jpg": "權杖皇后", "qzqsz.jpg": "權杖騎士", "qzscz.jpg": "權杖侍者",
+    "qz10z.jpg": "權杖10", "qz9z.jpg": "權杖9", "qz8z.jpg": "權杖8", "qz7z.jpg": "權杖7", "qz6z.jpg": "權杖6",
+    "qz5z.jpg": "權杖5", "qz4z.jpg": "權杖4", "qz3z.jpg": "權杖3", "qz2z.jpg": "權杖2", "qz1z.jpg": "權杖1",
+    "sbgwz.jpg": "聖杯國王", "sbhhz.jpg": "聖杯皇后", "sbqsz.jpg": "聖杯騎士", "sbscz.jpg": "聖杯侍者",
+    "sb10z.jpg": "聖杯10", "sb9z.jpg": "聖杯9", "sb8z.jpg": "聖杯8", "sb7z.jpg": "聖杯7", "sb6z.jpg": "聖杯6",
+    "sb5z.jpg": "聖杯5", "sb4z.jpg": "聖杯4", "sb3z.jpg": "聖杯3", "sb2z.jpg": "聖杯2", "sb1z.jpg": "聖杯1",
+    "sjz.jpg": "世界", "spz.jpg": "審判", "tyz.jpg": "太陽", "ylz.jpg": "月亮", "xxz.jpg": "星星",
+    "gtz.jpg": "高塔", "emz.jpg": "惡魔", "jzz.jpg": "節制", "ssz.jpg": "死神", "ddrz.jpg": "吊人",
+    "zyz.jpg": "正義", "myzlz.jpg": "命運之輪", "ysz.jpg": "隱者", "llz.jpg": "力量", "zcz.jpg": "戰車",
+    "lrz.jpg": "大戀人", "jhz.jpg": "教宗", "hdz.jpg": "皇帝", "nhz.jpg": "女皇", "njsz.jpg": "女祭司",
+    "mfsz.jpg": "魔術師", "yrz.jpg": "愚人"
+};
+
+const nonReversibleCards = [
+        "null.jpg",
+        "O_Sexuality_New_Era.png",
+"I_Sexuality_Magician.PNG",
+"II_Sexuality_High_Priestess.PNG",
+"III_Sexuality_Empress.PNG",
+"IV_Sexuality_Great_Marshal.PNG",
+"V_Sexuality_Goddess.PNG",
+"VI_Sexuality_Choice.PNG",
+"VII_Sexuality_Summon.PNG",
+"VIII_Sexuality_Strength.png",
+"IX_Sexuality_Hermit.PNG",
+"X_Sexuality_Wheel_of_Fortune.PNG",
+"XI_Sexuality_Justice.PNG",
+"XII_Sexuality_Restriction.PNG",
+"XIII_Sexuality_Death.PNG",
+"XIV_Sexuality_Temperance.PNG",
+"XV_Sexuality_Kink.PNG",
+"XVI_Sexuality_Tower.PNG",
+"XVII_Sexuality_Star.PNG",
+"XVIII_Sexuality_Moon.png",
+"XIX_Sexuality_Sunshine.PNG",
+"XX_Sexuality_Judgement.PNG",
+"XXI_Sexuality_Universe.PNG",
+"XXII_Sexuality_Unknown.PNG",
+"XXIII_Sexuality_Epic_Romance.PNG",
+"Sexuality_Queen_of_Pentacle.png",
+"Sexuality_Princess_of_Pentacle.png",
+"Sexuality_Queen_of_Cups.PNG",
+"Sexuality_Princess_of_Cups.PNG",
+"Sexuality_Queen_of_Fire.PNG",
+"Sexuality_Princess_of_Fire.PNG",
+"Sexuality_Queen_of_Wisdom.png",
+"Sexuality_Princess_of_Wisdom.png",
+"Sexuality_Queen_of_Eros.PNG",
+"Sexuality_Princess_of_Eros.PNG",
+"1_Sexuality_Oracle_of_Inspiration.PNG",
+"2_Sexuality_Oracle_of_Garden.png",
+"3_Sexuality_Oracle_of_Rose_Love.PNG",
+"4_Sexuality_Oracle_of_Balance.png",
+"5_Sexuality_Oracle_of_Manifest.PNG",
+"6_Sexuality_Oracle_of_Vacation.png",
+"7_Sexuality_Oracle_of_Pleasure.PNG"
+    ];
+    const sexualityCards = [
+    "O_Sexuality_New_Era.png",
+"I_Sexuality_Magician.PNG",
+"II_Sexuality_High_Priestess.PNG",
+"III_Sexuality_Empress.PNG",
+"IV_Sexuality_Great_Marshal.PNG",
+"V_Sexuality_Goddess.PNG",
+"VI_Sexuality_Choice.PNG",
+"VII_Sexuality_Summon.PNG",
+"VIII_Sexuality_Strength.png",
+"IX_Sexuality_Hermit.PNG",
+"X_Sexuality_Wheel_of_Fortune.PNG",
+"XI_Sexuality_Justice.PNG",
+"XII_Sexuality_Restriction.PNG",
+"XIII_Sexuality_Death.PNG",
+"XIV_Sexuality_Temperance.PNG",
+"XV_Sexuality_Kink.PNG",
+"XVI_Sexuality_Tower.PNG",
+"XVII_Sexuality_Star.PNG",
+"XVIII_Sexuality_Moon.png",
+"XIX_Sexuality_Sunshine.PNG",
+"XX_Sexuality_Judgement.PNG",
+"XXI_Sexuality_Universe.PNG",
+"XXII_Sexuality_Unknown.PNG",
+"XXIII_Sexuality_Epic_Romance.PNG",
+"Sexuality_Queen_of_Pentacle.png",
+"Sexuality_Princess_of_Pentacle.png",
+"Sexuality_Queen_of_Cups.PNG",
+"Sexuality_Princess_of_Cups.PNG",
+"Sexuality_Queen_of_Fire.PNG",
+"Sexuality_Princess_of_Fire.PNG",
+"Sexuality_Queen_of_Wisdom.png",
+"Sexuality_Princess_of_Wisdom.png",
+"Sexuality_Queen_of_Eros.PNG",
+"Sexuality_Princess_of_Eros.PNG",
+"1_Sexuality_Oracle_of_Inspiration.PNG",
+"2_Sexuality_Oracle_of_Garden.png",
+"3_Sexuality_Oracle_of_Rose_Love.PNG",
+"4_Sexuality_Oracle_of_Balance.png",
+"5_Sexuality_Oracle_of_Manifest.PNG",
+"6_Sexuality_Oracle_of_Vacation.png",
+"7_Sexuality_Oracle_of_Pleasure.PNG",
+];
+
+
+        // 隨機顯示多張圖片的函數
+        function showRandomImages() {
+        const count = parseInt(document.getElementById("image-count").value);
+        const allowNull = document.getElementById("allow-null").checked;
+        const onlyUpright = document.getElementById("only-upright").checked;
+
+        const imageContainer = document.getElementById("image-container");
+        const cardNames = document.getElementById("card-names");
+        imageContainer.innerHTML = "";
+        cardNames.innerHTML = "";
+
+        if (count > images.length) {
+            alert("圖片數量超出可選範圍！");
+            return;
+        }
+
+        const onlySexuality = document.getElementById("only-sexuality").checked;
+        const allowSexuality = document.getElementById("allow-sexuality").checked;
+
+
+// 依據選項切換可抽的牌組
+let drawPool = [...images];
+
+if (onlySexuality) {
+    drawPool = drawPool.filter(name => sexualityCards.includes(name));
+} else {
+    if (!allowNull) {
+        drawPool = drawPool.filter(name => name !== "null.jpg");
+    }
+    if (!allowSexuality) {
+        drawPool = drawPool.filter(name => !sexualityCards.includes(name));
+    }
+}
+
+
+
+        const selectedImages = [];
+        const usedSet = new Set();
+
+        while (selectedImages.length < count) {
+            const randomIndex = Math.floor(Math.random() * drawPool.length);
+            const image = drawPool[randomIndex];
+
+
+            if (!allowNull && image === "null.jpg") continue;
+            if (usedSet.has(image)) continue;
+
+            const isNonReversible = nonReversibleCards.includes(image);
+            const reversed = !onlyUpright && !isNonReversible && Math.random() < 0.5;
+
+            selectedImages.push({ name: image, reversed });
+            usedSet.add(image);
+        }
+
+        const namesArray = [];
+
+        selectedImages.forEach(({ name, reversed }) => {
+            const container = document.createElement("div");
+            container.classList.add("image-container");
+
+            const selectedImage = `./Image/${name}`;
+
+            const linkElement = document.createElement("a");
+            linkElement.href = selectedImage;
+            linkElement.target = "_blank";
+
+            const imgElement = document.createElement("img");
+            imgElement.src = selectedImage;
+            imgElement.alt = "隨機圖片";
+
+            const label = document.createElement("div");
+
+            if (nonReversibleCards.includes(name)) {
+                label.textContent = name === "null.jpg" ? "空白牌" : "正";
+            } else {
+                label.textContent = reversed ? "逆" : "正";
+                if (reversed) {
+                    imgElement.style.transform = "rotate(180deg)";
+                }
+            }
+            // 收集 Sexuality 說明
+
+
+            linkElement.appendChild(imgElement);
+            container.appendChild(linkElement);
+            container.appendChild(label);
+            imageContainer.appendChild(container);
+
+            let displayName = imageNames[name] || name;
+            if (reversed && !nonReversibleCards.includes(name)) {
+                displayName += "逆";
+            }
+            namesArray.push(displayName);
+        });
+
+        let suffixes = [];
+        if (onlyUpright) suffixes.push("純正位抽牌");
+        if (onlySexuality) suffixes.push("只抽 Sexuality 牌");
+        //if (!onlySexuality && allowSexuality) suffixes.push("允許出現 Sexuality 牌");
+
+
+        let nameText = namesArray.join("、");
+        if (suffixes.length > 0) {
+            nameText += "（" + suffixes.join("，") + "）";
+        }
+        cardNames.textContent = nameText;
+
+        refreshImageVisibility();
+        
+    }
+
+    function copyCardNames() {
+        const text = document.getElementById("card-names").textContent;
+        if (!text.trim()) {
+            alert("目前沒有抽出任何牌喔！");
+            return;
+        }
+
+        navigator.clipboard.writeText(text).then(() => {
+            alert("已複製抽牌結果！");
+        }).catch(err => {
+            alert("複製失敗：" + err);
+        });
+    }
+
+    function refreshImageVisibility() {
+        const showImage = document.getElementById("show-image").checked;
+        const containers = document.querySelectorAll(".image-container");
+
+        containers.forEach(container => {
+            container.style.display = showImage ? "inline-block" : "none";
+        });
+    }
+
+    </script>
+</body>
+</html>

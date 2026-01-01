@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>圖片批次生成器（左右兩欄）</title>
+    <style>
+        body { font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Noto Sans", "Helvetica Neue", Arial, "Apple Color Emoji", "Segoe UI Emoji"; }
+        .grid {
+            display: grid;
+            grid-template-columns: 1fr 3fr;
+            gap: 12px;
+            align-items: start;
+            max-width: 1000px;
+        }
+        textarea {
+            width: 100%;
+            min-height: 220px;
+            font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+        }
+        .controls { margin: 12px 0; }
+        #output {
+            background: #f0f0f0;
+            padding: 1em;
+            white-space: pre-wrap;
+        }
+        label { font-weight: 600; display: inline-block; margin-bottom: 6px; }
+    </style>
+</head>
+<body>
+    <h3>批次生成圖片區塊（左：檔名、右：對應 Ref）</h3>
+
+    <div class="grid">
+        <div>
+            <label for="inputNames">圖片檔名（每行一個）：</label>
+            <textarea id="inputNames"></textarea>
+        </div>
+        <div>
+            <label for="inputRefs">對應圖片Ref（與左側逐行對應）：</label>
+            <textarea id="inputRefs"></textarea>
+        </div>
+    </div>
+
+    <div class="controls">
+        <label for="inputWidth">圖片寬度（0–100%）：</label>
+        <input type="number" id="inputWidth" min="0" max="100" value="70"> %
+        <br><br>
+        <button onclick="generate()">確定</button>
+    </div>
+
+    <hr>
+    <pre id="output"></pre>
+
+    <script>
+        function htmlEscape(str) {
+            return String(str)
+                .replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;")
+                .replace(/"/g, "&quot;")
+                .replace(/'/g, "&#39;");
+        }
+
+        function generate() {
+            const names = document.getElementById("inputNames").value.split("\n").map(s => s.trim());
+            const refs  = document.getElementById("inputRefs").value.split("\n").map(s => s.trim());
+            const widthInput = document.getElementById("inputWidth").value.trim();
+            const width = Math.min(Math.max(parseInt(widthInput, 10), 0), 100) || 70; // 限制 0–100，預設 70
+
+            const cleanNames = names.filter(n => n !== "");
+            let html = "";
+
+            cleanNames.forEach((filename, idx) => {
+                const ref = (idx < refs.length ? refs[idx] : "").trim();
+                const refEscaped = htmlEscape(ref);
+
+                html += `
+<div style="text-align: center;">
+    <a href="../Image/${filename}">
+        <img src="../Image/${filename}" alt="---" style="width: ${width}%; height: auto;">
+    </a>
+</div>
+<p class="dark-background">
+    ▲
+    <span style="font-size: 0.7em; line-height: 0.8;">
+        <br>Ref: ${refEscaped}
+    </span>
+    <br><br>
+</p>\n\n\n`;
+            });
+
+            document.getElementById("output").textContent = html.trim();
+
+            const output = document.getElementById("output");
+            const text = output.textContent;
+            navigator.clipboard.writeText(text).then(() => {
+                alert("已複製到剪貼簿！");
+            }).catch(err => {
+                alert("複製失敗：" + err);
+            });
+        }
+    </script>
+</body>
+</html>
